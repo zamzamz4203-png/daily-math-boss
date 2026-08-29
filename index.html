@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Math Boss</title>
+<meta name="description" content="중2-2부터 공통수학1까지 매일 5문제 사고력 수학 챌린지">
+<style>
+:root{--bg:#0b1020;--card:#141b34;--card2:#1a2342;--text:#f5f7ff;--muted:#aeb8d4;--accent:#8aa4ff;--good:#5ee0a6;--bad:#ff7d8e;--warn:#ffd166;--line:rgba(255,255,255,.09)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:linear-gradient(180deg,#08101f,#101831 55%,#0b1020);color:var(--text)}
+.wrap{max-width:920px;margin:auto;padding:22px 15px 70px}
+.hero,.stats{border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 15px 42px rgba(0,0,0,.24)}
+.hero{background:linear-gradient(135deg,#192451,#30235a)} .stats{margin-top:14px;background:#111a32}
+h1{margin:0 0 8px;font-size:30px}.sub{color:var(--muted);line-height:1.65}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.badge{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.09);font-size:13px}
+.stats h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{background:#192343;border-radius:15px;padding:13px}.stat span{font-size:12px;color:var(--muted)}.stat b{display:block;font-size:22px;margin-top:4px}
+.bar{height:10px;background:#27304d;border-radius:99px;overflow:hidden;margin-top:12px}.bar>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--good));width:0}
+.nav{position:sticky;top:0;z-index:10;display:flex;gap:7px;padding:11px 0;background:rgba(11,16,32,.86);backdrop-filter:blur(12px)}.nav button{flex:1;border:0;border-radius:13px;padding:11px 6px;background:#202a4d;color:#fff;font-weight:900;cursor:pointer}
+.problem{scroll-margin-top:76px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.num{font-weight:900;font-size:22px}.topic{font-size:12px;background:#222d53;color:#d8e0ff;padding:6px 9px;border-radius:999px}
+.level{margin:8px 0 12px;color:var(--warn);font-size:13px;font-weight:800}.q{white-space:pre-line;line-height:1.9;font-size:17px}
+.inputRow{display:flex;gap:8px;margin-top:17px}.inputRow input{flex:1;min-width:0;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:#0d1530;color:#fff;font-size:16px}.submit{border:0;border-radius:12px;background:var(--good);color:#06120e;font-weight:900;padding:0 15px;cursor:pointer}
+.feedback{min-height:24px;margin-top:8px;font-weight:800;font-size:14px}.ok{color:var(--good)}.no{color:var(--bad)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.actions button{border:0;border-radius:11px;padding:10px 12px;font-weight:800;cursor:pointer}.hintBtn{background:#303a5d;color:#fff}.ansBtn{background:var(--accent);color:#0a1021}
+.box{display:none;margin-top:11px;padding:14px;border-radius:14px;background:var(--card2);line-height:1.75}.hint{border-left:4px solid var(--warn)}.answer{border-left:4px solid var(--good)}
+.counter{font-size:12px;color:var(--muted);margin-top:10px}.footer{color:var(--muted);font-size:13px;line-height:1.7;margin-top:20px;padding:16px;background:#10182e;border-radius:16px}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}.q{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<h1>🔥 Daily Math Boss</h1>
+<div class="sub">숫자는 작고 단순하게. 대신 <b>한 번에 식이 보이지 않는 문제</b>, <b>조건을 뒤집어 생각해야 하는 문제</b>, <b>여러 개념을 연결해야 하는 문제</b>만 매일 5개.</div>
+<div class="meta"><span class="badge" id="dateBadge"></span><span class="badge">매일 00:00 새 문제</span><span class="badge" id="countdown"></span></div>
+</section>
+
+<section class="stats">
+<h2>📊 최근 7일 학습 리포트</h2>
+<div class="grid">
+<div class="stat"><span>정답률</span><b id="rate">0%</b></div>
+<div class="stat"><span>채점한 문제</span><b id="graded">0</b></div>
+<div class="stat"><span>힌트 조회</span><b id="hintTotal">0회</b></div>
+<div class="stat"><span>정답·해설 조회</span><b id="answerTotal">0회</b></div>
+</div>
+<div class="bar"><div id="rateBar"></div></div>
+</section>
+
+<nav class="nav" id="nav"></nav>
+<main id="problems"></main>
+<div class="footer">문제의 숫자는 대부분 한 자리수 또는 20 이하로 제한했습니다. 난이도는 계산량이 아니라 발상과 조건 해석에서 나오도록 구성했습니다.</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function ymd(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function seedNum(d=new Date()){return Number(ymd(d).replaceAll('-',''))}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
+let currentDate=ymd(), random=rng(seedNum());
+const pick=a=>a[Math.floor(random()*a.length)];
+function norm(s){return String(s).replace(/\s/g,'').replace(/−/g,'-').replace(/√/g,'sqrt').toLowerCase()}
+function fracNum(s){let m=s.match(/^(-?\d+)\/(-?\d+)$/);return m?Number(m[1])/Number(m[2]):Number(s)}
+function equivalent(a,b){a=norm(a);b=norm(b);if(a===b)return true;let x=fracNum(a),y=fracNum(b);return Number.isFinite(x)&&Number.isFinite(y)&&Math.abs(x-y)<1e-10}
+function logKey(date,n){return `DMBLOG_${date}_${n}`}
+function getLog(date,n){return JSON.parse(localStorage.getItem(logKey(date,n))||'{"attempts":0,"correct":false,"hintViews":0,"answerViews":0}')}
+function setLog(date,n,o){localStorage.setItem(logKey(date,n),JSON.stringify(o))}
+function answerKey(date,n){return `DMBANS_${date}_${n}`}
+
+// ============================================
+/* 문제 데이터 영역
+   현재는 오프라인 내장형 문제은행입니다.
+   추후 외부 공개 문제 API를 연결할 경우,
+   fetch()로 받아온 문제 배열을 bank 대신 사용하면 됩니다.
+*/
+// ============================================
+const bank = [
+()=>({topic:"중2-2 · 닮음",level:"★★★★★★",
+q:`△ABC에서 D는 AB 위, E는 AC 위의 점이고 DE ∥ BC이다.
+AD:DB=1:2이다.
+
+△ADE의 넓이와 사다리꼴 DBCE의 넓이의 차가 7일 때,
+△ABC의 넓이를 구하여라.`,
+hint:`닮음비 1:3 → 넓이비 1:9. 작은 삼각형의 넓이를 x라고 두고 '사다리꼴 - 작은 삼각형'을 식으로 바꿔라.`,
+expected:"9",solution:`△ADE:△ABC=1:9. 작은 삼각형 넓이를 x라 하면 전체 9x, 사다리꼴 8x. 차가 7이므로 8x-x=7 → x=1. 따라서 전체 넓이는 9.`}),
+
+()=>({topic:"중2-2 · 확률",level:"★★★★★★★",
+q:`1, 2, 3, 4가 적힌 카드가 한 장씩 있다.
+이 중 서로 다른 두 장을 뽑아 두 자리 수를 만든다.
+
+만든 수가 3의 배수라는 사실을 알고 있을 때,
+그 수가 30보다 클 확률을 구하여라.`,
+hint:`처음부터 전체 12개를 보지 말고, '3의 배수인 두 자리 수'만 다시 전체 경우로 잡아라.`,
+expected:"1/4",solution:`가능한 두 자리 수 중 3의 배수는 12, 21, 24, 42 네 개. 이 중 30보다 큰 것은 42 하나이므로 확률은 1/4.`}),
+
+()=>({topic:"중2-2 · 피타고라스/넓이",level:"★★★★★★",
+q:`직각삼각형 ABC에서 ∠C=90°이다.
+AC와 BC의 길이는 서로 다른 자연수이고,
+AC+BC=7, AB=5이다.
+
+△ABC의 넓이를 구하여라.`,
+hint:`두 직각변을 x,y라 두고 x+y=7, x²+y²=25를 이용해 xy를 구하라.`,
+expected:"6",solution:`(x+y)²=x²+y²+2xy이므로 49=25+2xy → xy=12. 넓이는 xy/2=6.`}),
+
+()=>({topic:"중3-1 · 제곱근",level:"★★★★★★",
+q:`a=√(6+2√5), b=√(6-2√5)라 하자.
+
+a+b의 값을 구하여라.`,
+hint:`6±2√5를 (√5±1)² 꼴로 바꿔라.`,
+expected:"2sqrt5",solution:`6+2√5=(√5+1)², 6-2√5=(√5-1)². 따라서 a+b=2√5.`}),
+
+()=>({topic:"중3-1 · 인수분해/역추론",level:"★★★★★★★",
+q:`서로 다른 자연수 a,b가
+a+b=7이고,
+a²+b²가 가장 작다.
+
+ab의 값을 구하여라.`,
+hint:`합이 일정할 때 두 수가 가까울수록 제곱의 합이 작다. 단, 서로 달라야 한다.`,
+expected:"12",solution:`합이 7인 서로 다른 자연수 중 가장 가까운 것은 3,4. 따라서 ab=12.`}),
+
+()=>({topic:"중3-1 · 이차방정식",level:"★★★★★★★",
+q:`이차방정식 x²-5x+k=0의 두 근이 모두 자연수이다.
+두 근의 차가 가장 작을 때 k의 값을 구하여라.`,
+hint:`두 자연수의 합이 5. 가능한 쌍 중 차가 가장 작은 것을 찾아라.`,
+expected:"6",solution:`두 근의 합은 5. 자연수 쌍은 (1,4),(2,3). 차가 가장 작은 것은 2,3이므로 k=곱=6.`}),
+
+()=>({topic:"중3-1 · 이차함수/대칭",level:"★★★★★★",
+q:`이차함수 y=(x-2)²-1의 그래프 위의 두 점 A,B의 y좌표가 서로 같다.
+A의 x좌표가 1이고, A≠B일 때 B의 x좌표를 구하여라.`,
+hint:`축 x=2를 기준으로 대칭인 두 점을 생각하라.`,
+expected:"3",solution:`A의 x좌표 1은 축 x=2에서 왼쪽으로 1만큼. 같은 y값의 다른 점은 오른쪽으로 1만큼인 x=3.`}),
+
+()=>({topic:"중3-2 · 삼각비",level:"★★★★★★★",
+q:`직각삼각형 ABC에서 ∠C=90°이고,
+sin A=3/5이다.
+
+BC=6일 때, AC의 길이를 구하여라.`,
+hint:`sin A=BC/AB. 먼저 AB를 구하고 피타고라스 정리를 쓰면 된다.`,
+expected:"8",solution:`3/5=6/AB → AB=10. 따라서 AC=√(10²-6²)=8.`}),
+
+()=>({topic:"중3-2 · 원",level:"★★★★★★★",
+q:`반지름이 5인 원에서 길이가 8인 현 AB가 있다.
+중심 O에서 AB에 내린 수선의 발을 H라 한다.
+
+OH의 길이를 구하여라.`,
+hint:`OH는 현을 이등분한다. AH=4.`,
+expected:"3",solution:`OA=5, AH=4인 직각삼각형 OHA에서 OH=3.`}),
+
+()=>({topic:"중3-2 · 통계/역추론",level:"★★★★★★★",
+q:`다섯 수 2, 4, 6, x, y의 평균과 중앙값이 모두 6이다.
+x<y일 때 x+y의 값을 구하여라.`,
+hint:`평균 조건만으로 합을 먼저 구해도 된다. 중앙값 조건은 가능한 배치를 확인하는 역할이다.`,
+expected:"18",solution:`평균 6이므로 전체 합은 30. 따라서 x+y=30-(2+4+6)=18.`}),
+
+()=>({topic:"공통수학1 · 다항식",level:"★★★★★★★",
+q:`a+b=4, ab=1일 때,
+a²+b²의 값을 구하여라.`,
+hint:`(a+b)²=a²+2ab+b².`,
+expected:"14",solution:`a²+b²=(a+b)²-2ab=16-2=14.`}),
+
+()=>({topic:"공통수학1 · 방정식/조건 해석",level:"★★★★★★★",
+q:`두 실수 x,y가
+x+y=6, xy=8을 만족한다.
+
+|x-y|의 값을 구하여라.`,
+hint:`(x-y)²=(x+y)²-4xy.`,
+expected:"2",solution:`(x-y)²=36-32=4이므로 |x-y|=2.`}),
+
+()=>({topic:"공통수학1 · 절댓값",level:"★★★★★★★",
+q:`실수 x가
+|x-2|+|x-5|=3
+을 만족한다.
+
+가능한 x의 범위의 길이를 구하여라.`,
+hint:`2와 5 사이에 있는 모든 점은 두 점까지 거리의 합이 3이다.`,
+expected:"3",solution:`2≤x≤5에서 |x-2|+|x-5|=3. 따라서 해의 범위 길이는 5-2=3.`}),
+
+()=>({topic:"공통수학1 · 경우의 수",level:"★★★★★★★",
+q:`1,2,3,4 중 서로 다른 세 수를 골라 한 줄로 배열한다.
+단, 1과 2는 서로 이웃하면 안 된다.
+
+가능한 배열의 수를 구하여라.`,
+hint:`전체 배열에서 1과 2가 붙는 경우를 빼라.`,
+expected:"16",solution:`전체는 4P3=24. 1과 2가 함께 뽑혀 붙는 경우는, 세 번째 수를 고르는 2가지 × [1,2]를 한 덩어리로 보는 2가지 배치 × 내부 순서 2가지 =8. 따라서 24-8=16.`}),
+
+()=>({topic:"융합 · 닮음+방정식",level:"★★★★★★★★",
+q:`△ABC에서 D,E는 각각 AB,AC 위에 있고 DE∥BC이다.
+AD:AB=1:2이다.
+
+△ADE의 넓이에 3을 더한 값이 사다리꼴 DBCE의 넓이와 같을 때,
+△ABC의 넓이를 구하여라.`,
+hint:`넓이비는 1:4. 작은 삼각형 넓이를 x로 두면 사다리꼴은 3x.`,
+expected:"6",solution:`3x=x+3 → 2x=3 → x=3/2. 전체는 4x=6.`})
+];
+
+function makeDaily(){
+  random=rng(seedNum());
+  const categories = [
+    [0,1,2],
+    [3,4,5,6],
+    [7,8,9],
+    [10,11,12,13,14]
+  ];
+  const chosen = categories.map(g=>pick(g));
+  const all=[...Array(bank.length).keys()];
+  while(chosen.length<5){
+    let c=pick(all);
+    if(!chosen.includes(c)) chosen.push(c);
+  }
+  return chosen.map(i=>bank[i]());
+}
+
+let problems=[];
+function render(){
+  currentDate=ymd(); problems=makeDaily();
+  $("dateBadge").textContent=currentDate+" 오늘의 5문제";
+  $("nav").innerHTML=""; $("problems").innerHTML="";
+  problems.forEach((p,i)=>{
+    let n=i+1,log=getLog(currentDate,n),saved=localStorage.getItem(answerKey(currentDate,n))||"";
+    let nb=document.createElement("button");nb.textContent=n+"번";nb.onclick=()=>$("p"+n).scrollIntoView({behavior:"smooth",block:"start"});$("nav").appendChild(nb);
+    let s=document.createElement("section");s.className="problem";s.id="p"+n;
+    s.innerHTML=`<div class="topline"><div class="num">문제 ${n}</div><div class="topic">${p.topic}</div></div>
+    <div class="level">${p.level}</div><div class="q">${p.q}</div>
+    <div class="inputRow"><input id="input${n}" value="${saved.replaceAll('"','&quot;')}" placeholder="답을 입력하세요"><button class="submit" onclick="grade(${n})">채점</button></div>
+    <div class="feedback" id="fb${n}">${log.correct?'<span class="ok">✓ 정답 기록됨</span>':''}</div>
+    <div class="actions"><button class="hintBtn" onclick="showHint(${n})">힌트 보기</button><button class="ansBtn" onclick="showAnswer(${n})">정답·해설 보기</button></div>
+    <div class="box hint" id="h${n}">${p.hint}</div><div class="box answer" id="a${n}"><b>정답:</b> ${p.aliases?.[0]||p.expected}<br><br>${p.solution}</div>
+    <div class="counter" id="c${n}">시도 ${log.attempts}회 · 힌트 ${log.hintViews}회 · 정답/해설 ${log.answerViews}회</div>`;
+    $("problems").appendChild(s);
+  });updateWeekly();
+}
+function updateCounter(n){let l=getLog(currentDate,n);$("c"+n).textContent=`시도 ${l.attempts}회 · 힌트 ${l.hintViews}회 · 정답/해설 ${l.answerViews}회`;updateWeekly()}
+function grade(n){let input=$("input"+n).value.trim();if(!input){$("fb"+n).innerHTML='<span class="no">답을 입력해 주세요.</span>';return}localStorage.setItem(answerKey(currentDate,n),input);let p=problems[n-1];let ok=equivalent(input,p.expected)||(p.aliases||[]).some(x=>equivalent(input,x));let l=getLog(currentDate,n);l.attempts++;if(ok)l.correct=true;setLog(currentDate,n,l);$("fb"+n).innerHTML=ok?'<span class="ok">✓ 정답!</span>':'<span class="no">✕ 다시 생각해 봐.</span>';updateCounter(n)}
+function showHint(n){let l=getLog(currentDate,n);l.hintViews++;setLog(currentDate,n,l);$("h"+n).style.display="block";updateCounter(n)}
+function showAnswer(n){let l=getLog(currentDate,n);l.answerViews++;setLog(currentDate,n,l);$("a"+n).style.display="block";updateCounter(n)}
+function updateWeekly(){
+  let total=0,correct=0,hints=0,answers=0,now=new Date();
+  for(let d=0;d<7;d++){let dt=new Date(now);dt.setDate(now.getDate()-d);let date=ymd(dt);for(let n=1;n<=5;n++){let l=getLog(date,n);if(l.attempts>0){total++;if(l.correct)correct++}hints+=l.hintViews||0;answers+=l.answerViews||0}}
+  let rate=total?Math.round(correct/total*100):0;$("rate").textContent=rate+"%";$("graded").textContent=total;$("hintTotal").textContent=hints+"회";$("answerTotal").textContent=answers+"회";$("rateBar").style.width=rate+"%";
+}
+function clock(){let now=new Date(),next=new Date(now);next.setHours(24,0,0,0);let ms=next-now;let h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);$("countdown").textContent=`다음 문제까지 ${h}시간 ${m}분 ${s}초`;if(ymd()!==currentDate)render()}
+render();clock();setInterval(clock,1000);
+</script>
+</body>
+</html>
