@@ -15,6 +15,9 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 h1{margin:0 0 8px;font-size:30px}.sub{color:var(--muted);line-height:1.65}
 .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.badge{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.09);font-size:13px}
 .status{margin-top:12px;padding:10px 12px;border-radius:12px;background:#101a36;color:#dbe3ff;font-size:13px;line-height:1.5}
+.resetRow{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.resetBtn{border:0;border-radius:13px;padding:11px 15px;background:#ffd166;color:#171207;font-weight:900;cursor:pointer}
+.resetNote{font-size:12px;color:#b9c4e2}
 .stats h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 .stat{background:#192343;border-radius:15px;padding:13px}.stat span{font-size:12px;color:var(--muted)}.stat b{display:block;font-size:22px;margin-top:4px}
 .bar{height:10px;background:#27304d;border-radius:99px;overflow:hidden;margin-top:12px}.bar>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--good));width:0}
@@ -39,6 +42,10 @@ a{color:#b7c5ff}.loading{padding:30px;text-align:center;color:var(--muted)}
 <div class="sub">매일 공개 수학 문제 저장소에서 문제를 가져온 뒤 <b>한국어 문제로 재구성</b>하여 보여줍니다.</div>
 <div class="meta"><span class="badge" id="dateBadge"></span><span class="badge">매일 00:00 새 선택</span><span class="badge" id="countdown"></span></div>
 <div class="status" id="status">외부 문제 저장소에 연결 중...</div>
+<div class="resetRow">
+  <button class="resetBtn" onclick="resetProblems()">🔄 문제 리셋</button>
+  <span class="resetNote">누르면 오늘의 5문제가 다른 문제로 바뀝니다. 학습기록은 유지됩니다.</span>
+</div>
 </section>
 
 <section class="stats">
@@ -66,7 +73,11 @@ const RAW="https://raw.githubusercontent.com/"+REPO+"/main/";
 const $=id=>document.getElementById(id);
 
 function ymd(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function seedNum(){return Number(ymd().replaceAll("-",""))}
+function seedNum(){
+  const base=Number(ymd().replaceAll("-",""));
+  const nonce=Number(localStorage.getItem("DMB_RESET_NONCE_"+ymd())||"0");
+  return base + nonce*104729;
+}
 function seeded(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function stripLatex(s=""){
   return String(s).replace(/\$\$/g,"").replace(/\$/g,"").replace(/\\sqrt\{([^}]+)\}/g,"√($1)")
@@ -217,7 +228,7 @@ async function loadDaily(){
   try{
     const candidates=await discoverCandidates();
     const rnd=seeded(seedNum());
-    // deterministic shuffle, so same date gives same set
+    // 날짜 + 리셋 횟수를 기준으로 문제를 선택
     const arr=[...candidates];
     for(let i=arr.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
     const out=[];
@@ -285,6 +296,19 @@ function updateWeekly(){
   const rate=total?Math.round(correct/total*100):0;
   $("rate").textContent=rate+"%";$("graded").textContent=total;$("hintTotal").textContent=hints+"회";$("answerTotal").textContent=answers+"회";$("rateBar").style.width=rate+"%";
 }
+
+async function resetProblems(){
+  const key="DMB_RESET_NONCE_"+ymd();
+  const cur=Number(localStorage.getItem(key)||"0");
+  localStorage.setItem(key,String(cur+1));
+
+  $("status").textContent="새로운 외부 문제 5개를 고르는 중…";
+  $("problems").innerHTML='<div class="loading">다른 문제를 불러오고 있습니다…</div>';
+  $("nav").innerHTML="";
+
+  await loadDaily();
+}
+
 function clock(){
   const now=new Date(),next=new Date(now);next.setHours(24,0,0,0);let ms=next-now;
   let h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);
