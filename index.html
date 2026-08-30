@@ -39,7 +39,7 @@ a{color:#b7c5ff}.loading{padding:30px;text-align:center;color:var(--muted)}
 <div class="wrap">
 <section class="hero">
 <h1>🌐 Daily Math Boss</h1>
-<div class="sub">외부 공개 문제 중 <b>대한민국 중2-2 ~ 공통수학1 교육과정</b>에 해당하는 문제만 선별하여 한국어로 보여줍니다.</div>
+<div class="sub">외부 공개 문제 중 <b>대한민국 중2-2 ~ 공통수학1의 허용 단원만</b> 엄격히 선별합니다. 반비례·일차함수 등 범위 밖 문제는 제외합니다.</div>
 <div class="meta"><span class="badge" id="dateBadge"></span><span class="badge">🇰🇷 중2-2 ~ 공통수학1</span><span class="badge">매일 00:00 새 선택</span><span class="badge" id="countdown"></span></div>
 <div class="status" id="status">외부 문제 저장소에 연결 중...</div>
 <div class="resetRow">
@@ -113,35 +113,55 @@ async function discoverCandidates(){
 
 
 const CURRICULUM_RULES=[
-  // 중2-2
-  {re:/similar triangles?|similarity|pythagorean|probability/i, topic:"중2-2", instruction:"주어진 조건을 이용하여 문제를 해결하시오."},
+  // 중2-2: 도형의 성질, 닮음, 피타고라스, 확률
+  {re:/similar triangles?|triangle similarity|similarity ratio|pythagorean theorem|probability/i,
+   topic:"중2-2 · 도형/확률", instruction:"주어진 조건을 이용하여 문제를 해결하시오."},
 
-  // 중3-1
-  {re:/square root|radical|irrational|real number/i, topic:"중3-1 · 제곱근과 실수", instruction:"제곱근과 실수의 성질을 이용하여 문제를 해결하시오."},
-  {re:/factor|factoring/i, topic:"중3-1 · 인수분해", instruction:"곱셈공식과 인수분해를 이용하여 문제를 해결하시오."},
-  {re:/quadratic equation/i, topic:"중3-1 · 이차방정식", instruction:"이차방정식의 성질을 이용하여 문제를 해결하시오."},
-  {re:/quadratic function|parabola/i, topic:"중3-1 · 이차함수", instruction:"이차함수와 그래프의 성질을 이용하여 문제를 해결하시오."},
+  // 중3-1: 제곱근과 실수, 다항식의 곱셈·인수분해, 이차방정식, 이차함수 y=ax² 계열
+  {re:/square root|radical|irrational number|real number/i,
+   topic:"중3-1 · 제곱근과 실수", instruction:"제곱근과 실수의 성질을 이용하여 문제를 해결하시오."},
+  {re:/factor(?:ing)? polynomial|factor completely|difference of squares|perfect square trinomial/i,
+   topic:"중3-1 · 인수분해", instruction:"곱셈공식과 인수분해를 이용하여 문제를 해결하시오."},
+  {re:/quadratic equation/i,
+   topic:"중3-1 · 이차방정식", instruction:"이차방정식의 성질을 이용하여 문제를 해결하시오."},
+  {re:/quadratic function|parabola|y\s*=\s*a?x\^?2/i,
+   topic:"중3-1 · 이차함수", instruction:"이차함수의 그래프와 성질을 이용하여 문제를 해결하시오."},
 
-  // 중3-2
-  {re:/trigonometric ratio|sine|cosine|tangent|circle|chord|inscribed angle/i, topic:"중3-2 · 삼각비/원의 성질", instruction:"삼각비 또는 원의 성질을 이용하여 문제를 해결하시오."},
-  {re:/statistics|mean|median|variance|standard deviation/i, topic:"중3-2 · 통계", instruction:"자료의 평균·중앙값·분산 등의 성질을 이용하여 문제를 해결하시오."},
+  // 중3-2: 삼각비, 원의 성질, 통계
+  {re:/trigonometric ratio|right triangle.*(?:sine|cosine|tangent)|(?:sine|cosine|tangent).*right triangle/i,
+   topic:"중3-2 · 삼각비", instruction:"직각삼각형의 삼각비를 이용하여 문제를 해결하시오."},
+  {re:/chord|inscribed angle|central angle|circle theorem|tangent.*circle|circle.*tangent/i,
+   topic:"중3-2 · 원의 성질", instruction:"원의 성질을 이용하여 문제를 해결하시오."},
+  {re:/mean|median|variance|standard deviation|statistics/i,
+   topic:"중3-2 · 통계", instruction:"자료의 평균·중앙값·분산 등의 성질을 이용하여 문제를 해결하시오."},
 
-  // 공통수학1
-  {re:/polynomial|remainder theorem|factor theorem/i, topic:"공통수학1 · 다항식", instruction:"다항식의 연산과 성질을 이용하여 문제를 해결하시오."},
-  {re:/complex number/i, topic:"공통수학1 · 복소수", instruction:"복소수의 성질을 이용하여 문제를 해결하시오."},
-  {re:/quadratic equation|equation|inequality|absolute value/i, topic:"공통수학1 · 방정식과 부등식", instruction:"방정식과 부등식의 성질을 이용하여 문제를 해결하시오."},
-  {re:/permutation|combination|counting principle/i, topic:"공통수학1 · 경우의 수", instruction:"경우를 빠짐없이 나누어 경우의 수를 구하시오."},
-  {re:/matrix|matrices/i, topic:"공통수학1 · 행렬", instruction:"행렬의 연산과 성질을 이용하여 문제를 해결하시오."}
+  // 공통수학1: 다항식, 방정식과 부등식, 경우의 수, 행렬
+  {re:/polynomial division|remainder theorem|factor theorem|polynomial multiplication/i,
+   topic:"공통수학1 · 다항식", instruction:"다항식의 연산과 성질을 이용하여 문제를 해결하시오."},
+  {re:/complex number|imaginary unit/i,
+   topic:"공통수학1 · 복소수와 이차방정식", instruction:"복소수와 이차방정식의 성질을 이용하여 문제를 해결하시오."},
+  {re:/quadratic inequality|absolute value inequality|system of inequalities|simultaneous quadratic|quadratic equation/i,
+   topic:"공통수학1 · 방정식과 부등식", instruction:"방정식과 부등식의 성질을 이용하여 문제를 해결하시오."},
+  {re:/permutation|combination|counting principle|fundamental counting principle/i,
+   topic:"공통수학1 · 경우의 수", instruction:"경우를 빠짐없이 나누어 경우의 수를 구하시오."},
+  {re:/matrix|matrices/i,
+   topic:"공통수학1 · 행렬", instruction:"행렬의 연산과 성질을 이용하여 문제를 해결하시오."}
 ];
 
 function classifyKorean(meta){
   const text=[meta.title,meta.lesson,meta.body].filter(Boolean).join(" ");
 
-  // 한국 중2-2 ~ 공통수학1 범위 밖 개념은 제외
-  const OUT_OF_SCOPE=/calculus|derivative|integral|limit|logarithm|exponential function|trigonometric function|radian|vector|conic section|ellipse|hyperbola|sequence|series|binomial theorem|polar|complex plane|mathematical induction/i;
+  // 범위 밖 개념은 무조건 제외
+  const OUT_OF_SCOPE = /calculus|derivative|integral|limit|logarithm|exponential function|sequence|series|vector|radian|polar|ellipse|hyperbola|conic|mathematical induction|binomial theorem|rational function|reciprocal function|inverse variation|direct variation|linear function|linear equation|linear inequality|slope|rate of change|domain and range|piecewise|cubic function|higher degree function|trigonometric function/i;
   if(OUT_OF_SCOPE.test(text)) return null;
 
-  for(const r of CURRICULUM_RULES) if(r.re.test(text)) return r;
+  // 특히 y=a/x 또는 f(x)=1/x 같은 반비례/유리함수는 제외
+  const compact = text.replace(/\s/g,"").toLowerCase();
+  if(/(?:f\(x\)|y)=.*1\/x/.test(compact) || /(?:f\(x\)|y)=a\/x/.test(compact)) return null;
+
+  for(const r of CURRICULUM_RULES){
+    if(r.re.test(text)) return r;
+  }
   return null;
 }
 
@@ -236,7 +256,7 @@ let currentDate=ymd(), problems=[];
 async function loadDaily(){
   currentDate=ymd();
   $("dateBadge").textContent=currentDate+" 외부 문제";
-  $("status").textContent="대한민국 중2-2 ~ 공통수학1 범위의 외부 문제를 선별하는 중…";
+  $("status").textContent="한국 교육과정 허용 단원을 엄격하게 검사하는 중…";
   $("problems").innerHTML='<div class="loading">문제를 가져오고 있습니다…</div>';
   $("nav").innerHTML="";
   try{
