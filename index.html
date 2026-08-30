@@ -36,7 +36,7 @@ a{color:#b7c5ff}.loading{padding:30px;text-align:center;color:var(--muted)}
 <div class="wrap">
 <section class="hero">
 <h1>🌐 Daily Math Boss</h1>
-<div class="sub">매일 인터넷의 공개 수학 문제 저장소에서 <b>실제 문제 데이터를 가져오는 버전</b>입니다.</div>
+<div class="sub">매일 공개 수학 문제 저장소에서 문제를 가져온 뒤 <b>한국어 문제로 재구성</b>하여 보여줍니다.</div>
 <div class="meta"><span class="badge" id="dateBadge"></span><span class="badge">매일 00:00 새 선택</span><span class="badge" id="countdown"></span></div>
 <div class="status" id="status">외부 문제 저장소에 연결 중...</div>
 </section>
@@ -55,8 +55,7 @@ a{color:#b7c5ff}.loading{padding:30px;text-align:center;color:var(--muted)}
 <nav class="nav" id="nav"></nav>
 <main id="problems"><div class="loading">문제를 가져오고 있습니다…</div></main>
 <div class="footer">
-문제 출처: OATutor Content / OpenStax. 외부 콘텐츠는 해당 JSON에 표시된 CC BY 4.0 라이선스 및 저작자 표시를 따릅니다.
-앱은 문제를 복제해 내장하지 않고 실행 시 공개 GitHub 저장소에서 직접 불러옵니다.
+문제 출처: OATutor Content / OpenStax (CC BY 4.0). 문제 데이터는 실행 시 공개 저장소에서 가져오며, 지시문과 힌트는 한국 중학교·공통수학 표현에 맞춰 한국어로 재구성합니다.
 </div>
 </div>
 
@@ -101,61 +100,118 @@ async function discoverCandidates(){
   return preferred.length>=30?preferred:names.slice(0,400);
 }
 
+
+const CURRICULUM_RULES=[
+  {re:/square root|radical|irrational|real number/i, topic:"중3-1 · 제곱근과 실수", instruction:"다음 식을 간단히 하시오."},
+  {re:/factor|factoring/i, topic:"공통수학1 · 인수분해", instruction:"다음 식을 인수분해하거나 주어진 조건에 맞게 정리하시오."},
+  {re:/quadratic/i, topic:"중3-1/공통수학1 · 이차방정식", instruction:"주어진 이차방정식 또는 식을 조건에 맞게 해결하시오."},
+  {re:/polynomial/i, topic:"공통수학1 · 다항식", instruction:"다항식의 구조를 이용하여 문제를 해결하시오."},
+  {re:/absolute value/i, topic:"공통수학1 · 절댓값", instruction:"절댓값의 의미를 이용하여 문제를 해결하시오."},
+  {re:/linear equation|equation/i, topic:"중2~공통수학1 · 방정식", instruction:"주어진 조건을 식으로 나타내어 해결하시오."},
+  {re:/function|graph/i, topic:"중3-1 · 함수", instruction:"함수와 그래프의 관계를 이용하여 문제를 해결하시오."},
+  {re:/probability|chance/i, topic:"중2-2 · 확률", instruction:"가능한 경우를 체계적으로 나누어 확률을 구하시오."},
+  {re:/statistics|mean|median|variance/i, topic:"중3-2 · 통계", instruction:"자료의 조건을 이용하여 값을 구하시오."},
+  {re:/rational expression|rational number/i, topic:"공통수학1 · 유리식/수 체계", instruction:"수와 식의 성질을 이용하여 간단히 하시오."}
+];
+
+function classifyKorean(meta){
+  const text=[meta.title,meta.lesson,meta.body].filter(Boolean).join(" ");
+  for(const r of CURRICULUM_RULES) if(r.re.test(text)) return r;
+  return null;
+}
+
+function mostlyMath(text=""){
+  const plain=stripHtml(text);
+  const letters=(plain.match(/[A-Za-z]{2,}/g)||[]);
+  // Accept short mathematical directions, reject long English word problems.
+  return letters.length<=7 || /simplify|evaluate|solve|factor|find|write/i.test(plain);
+}
+
+function koreanizeMathLine(text=""){
+  let t=stripLatex(stripHtml(text)).trim();
+  const reps=[
+    [/^Simplify the following expressions?\.?$/i,"다음 식을 간단히 하시오."],
+    [/^Simplify\.?$/i,"다음 식을 간단히 하시오."],
+    [/^Evaluate\.?$/i,"다음 값을 구하시오."],
+    [/^Solve\.?$/i,"다음 방정식을 푸시오."],
+    [/^Solve the equation\.?$/i,"다음 방정식을 푸시오."],
+    [/^Factor\.?$/i,"다음 식을 인수분해하시오."],
+    [/^Factor completely\.?$/i,"다음 식을 완전히 인수분해하시오."],
+    [/^Find the value of (.+)\.?$/i,"$1의 값을 구하시오."],
+    [/^Find (.+)\.?$/i,"$1을 구하시오."],
+    [/^Write (.+)\.?$/i,"$1을 나타내시오."],
+    [/^Graph (.+)\.?$/i,"$1의 그래프를 그리시오."]
+  ];
+  for(const [re,ko] of reps) if(re.test(t)) return t.replace(re,ko);
+  // If it is essentially a mathematical expression, keep the math unchanged.
+  if((t.match(/[A-Za-z]{2,}/g)||[]).length<=3) return t;
+  return "";
+}
+
+function koreanHintFrom(meta, step, topic){
+  const text=[meta.title,meta.lesson,step.stepTitle].filter(Boolean).join(" ");
+  if(/square root|radical/i.test(text)) return "완전제곱수 또는 근호의 성질을 먼저 확인해 보세요. 계산부터 하지 말고 식의 구조를 살펴보는 것이 핵심입니다.";
+  if(/factor/i.test(text)) return "공통인수, 곱셈공식, 두 수의 합과 곱 관계를 차례로 확인해 보세요.";
+  if(/quadratic/i.test(text)) return "이차식의 인수분해 가능 여부와 두 근의 합·곱 관계를 먼저 확인해 보세요.";
+  if(/absolute/i.test(text)) return "절댓값을 수직선에서의 거리로 해석하면 경우를 나누기 쉬워집니다.";
+  if(/function|graph/i.test(text)) return "그래프의 대칭, 절편, 증가·감소 관계 중 무엇을 사용할 수 있는지 먼저 확인해 보세요.";
+  if(/probability|chance/i.test(text)) return "전체 경우와 조건을 만족하는 경우를 먼저 분리해 보세요. '적어도'가 있으면 여사건도 생각해 보세요.";
+  if(/mean|median|variance|statistics/i.test(text)) return "평균은 전체 합, 중앙값은 순서, 분산은 평균으로부터의 거리라는 뜻을 이용하세요.";
+  return "바로 계산하기보다 주어진 조건을 식으로 정리하고, 어떤 성질을 한 번 더 연결해야 하는지 찾아보세요.";
+}
+
 async function loadProblem(id){
   const metaUrl=RAW+`content-pool/${id}/${id}.json`;
   const meta=await getJSON(metaUrl);
+  const rule=classifyKorean(meta);
+  if(!rule) throw new Error("out of Korean curriculum");
 
   const steps=await getJSON(API+`/content-pool/${id}/steps`);
-  const stepDirs=steps.filter(x=>x.type==="dir").slice(0,5);
+  const stepDirs=steps.filter(x=>x.type==="dir").slice(0,8);
   if(!stepDirs.length)throw new Error("no steps");
 
-  // Pick the first usable step. Many OATutor items contain multiple subquestions.
   let chosen=null;
   for(const sd of stepDirs){
     try{
       const sid=sd.name;
       const step=await getJSON(RAW+`content-pool/${id}/steps/${sid}/${sid}.json`);
-      if(step.stepTitle && step.stepAnswer && step.stepAnswer.length){
-        chosen={sid,step};break;
-      }
+      if(!step.stepTitle || !step.stepAnswer || !step.stepAnswer.length) continue;
+      if(!mostlyMath(step.stepTitle)) continue;
+      const koLine=koreanizeMathLine(step.stepTitle);
+      if(!koLine) continue;
+      chosen={sid,step,koLine};break;
     }catch(e){}
   }
-  if(!chosen)throw new Error("no usable step");
-
-  let hint="";
-  try{
-    const tut=await getJSON(API+`/content-pool/${id}/steps/${chosen.sid}/tutoring`);
-    const js=tut.find(x=>x.type==="file" && x.name.endsWith(".json"));
-    if(js){
-      const h=await getJSON(js.download_url);
-      hint=stripHtml(h.tutoringBody||h.body||h.hint||"");
-    }
-  }catch(e){}
+  if(!chosen)throw new Error("no translatable step");
 
   const answer=stripLatex(chosen.step.stepAnswer[0]||chosen.step.answerLatex||"");
-  const title=stripHtml(meta.title||"External Math Problem");
-  const body=stripHtml(meta.body||"");
-  const stepTitle=stripLatex(stripHtml(chosen.step.stepTitle||""));
-  const prompt=[body,stepTitle].filter(Boolean).join("\n\n");
+  if(!answer) throw new Error("no answer");
+
+  const bodyKo=koreanizeMathLine(meta.body||"") || rule.instruction;
+  let prompt=bodyKo;
+  if(chosen.koLine && chosen.koLine!==bodyKo) prompt += "\n\n" + chosen.koLine;
+
+  // Reject prompts that still contain long untranslated English.
+  const englishWords=(prompt.match(/[A-Za-z]{2,}/g)||[]);
+  if(englishWords.length>8) throw new Error("translation incomplete");
 
   return {
     id,
-    topic: meta.lesson || title,
-    title,
+    topic: rule.topic,
+    title: meta.title || "OpenStax Math",
     prompt,
     answer,
-    hint: hint || "문제의 조건을 식으로 정리하고, 필요한 개념을 먼저 찾아보세요.",
+    hint: koreanHintFrom(meta,chosen.step,rule.topic),
     source: meta.oer || "OpenStax / OATutor",
     license: meta.license || "CC BY 4.0"
   };
 }
-
 let currentDate=ymd(), problems=[];
 
 async function loadDaily(){
   currentDate=ymd();
   $("dateBadge").textContent=currentDate+" 외부 문제";
-  $("status").textContent="OATutor/OpenStax 공개 저장소에서 오늘의 문제를 고르는 중…";
+  $("status").textContent="외부 공개 문제 중 한국 교육과정에 맞고 한국어로 재구성 가능한 문제를 고르는 중…";
   $("problems").innerHTML='<div class="loading">문제를 가져오고 있습니다…</div>';
   $("nav").innerHTML="";
   try{
@@ -174,7 +230,7 @@ async function loadDaily(){
     }
     if(out.length<5)throw new Error("usable questions: "+out.length);
     problems=out;
-    $("status").innerHTML=`✓ 외부 저장소 연결 성공 · 오늘 ${out.length}문제를 직접 불러왔습니다. <a href="https://github.com/CAHLR/OATutor-Content" target="_blank" rel="noopener">원본 저장소</a>`;
+    $("status").innerHTML=`✓ 외부 문제 연결 성공 · 오늘 ${out.length}문제를 한국어로 재구성했습니다. <a href="https://github.com/CAHLR/OATutor-Content" target="_blank" rel="noopener">원본 저장소</a>`;
     render();
   }catch(e){
     console.error(e);
@@ -190,8 +246,8 @@ function render(){
     const nb=document.createElement("button");nb.textContent=n+"번";nb.onclick=()=>$("p"+n).scrollIntoView({behavior:"smooth",block:"start"});$("nav").appendChild(nb);
     const sec=document.createElement("section");sec.className="problem";sec.id="p"+n;
     sec.innerHTML=`
-    <div class="topline"><div class="num">문제 ${n}</div><div class="topic">외부 OER</div></div>
-    <div class="source">${escapeHtml(p.title)} · ${escapeHtml(p.topic)}</div>
+    <div class="topline"><div class="num">문제 ${n}</div><div class="topic">${escapeHtml(p.topic)}</div></div>
+    <div class="source">원문 출처: ${escapeHtml(p.title)} · OpenStax/OATutor</div>
     <div class="q">${escapeHtml(p.prompt)}</div>
     <div class="inputRow"><input id="input${n}" placeholder="답을 입력하세요"><button class="submit" onclick="grade(${n})">채점</button></div>
     <div class="feedback" id="fb${n}">${log.correct?'<span class="ok">✓ 정답 기록됨</span>':''}</div>
