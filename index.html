@@ -1,78 +1,136 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Daily Math Boss — 한국교육과정 검수형</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daily Math Boss v3</title>
 <style>
-:root{--bg:#0b1020;--card:#141b34;--card2:#1b2444;--text:#f6f8ff;--muted:#aeb8d4;--accent:#8aa4ff;--good:#5ee0a6;--bad:#ff7d8e;--warn:#ffd166}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:#0b1020;color:var(--text)}.wrap{max-width:900px;margin:auto;padding:20px 14px 70px}
-.hero{background:linear-gradient(135deg,#192451,#30235a);border-radius:24px;padding:22px}h1{margin:0 0 8px}.sub{color:#c1cae4;line-height:1.65}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{background:rgba(255,255,255,.09);padding:8px 10px;border-radius:999px;font-size:13px}
-.reset{margin-top:14px;border:0;border-radius:13px;padding:12px 16px;background:var(--warn);font-weight:900;cursor:pointer}
-.stats{margin-top:14px;background:#111a32;border-radius:20px;padding:18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:#192343;border-radius:14px;padding:12px}.stat span{font-size:12px;color:var(--muted)}.stat b{display:block;font-size:22px;margin-top:4px}
-.nav{position:sticky;top:0;display:flex;gap:7px;padding:10px 0;background:rgba(11,16,32,.9);z-index:3}.nav button{flex:1;border:0;border-radius:12px;padding:11px;background:#202a4d;color:white;font-weight:900}
-.problem{scroll-margin-top:70px;background:var(--card);border-radius:20px;padding:19px;margin:14px 0}.top{display:flex;justify-content:space-between;gap:8px}.topic{font-size:12px;background:#26325d;padding:6px 8px;border-radius:999px}.source{font-size:12px;color:#9faed7;margin:8px 0}.q{white-space:pre-line;line-height:1.9;font-size:17px}
-.row{display:flex;gap:8px;margin-top:15px}input{flex:1;min-width:0;background:#0d1530;color:white;border:1px solid #334065;border-radius:12px;padding:12px}.grade{border:0;border-radius:12px;background:var(--good);font-weight:900;padding:0 14px}.feedback{min-height:22px;margin-top:7px;font-weight:800}.ok{color:var(--good)}.no{color:var(--bad)}
-.actions{display:flex;gap:8px;margin-top:8px}.actions button{border:0;border-radius:11px;padding:10px 12px;font-weight:800}.hintBtn{background:#303a5d;color:white}.ansBtn{background:var(--accent)}.box{display:none;margin-top:10px;background:var(--card2);border-radius:13px;padding:13px;line-height:1.7}.counter{font-size:12px;color:var(--muted);margin-top:9px}
-.note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.65}
-@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
-</style></head>
-<body><div class="wrap">
+:root{--bg:#09101f;--card:#141d38;--card2:#1a2648;--text:#f5f7ff;--muted:#aeb9d8;--accent:#8fa8ff;--good:#66e0aa;--bad:#ff8696;--warn:#ffd166}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif}
+.wrap{max-width:920px;margin:auto;padding:18px 14px 80px}.hero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#192856,#35245e)}
+h1{margin:0 0 8px;font-size:30px}.sub{line-height:1.65;color:#c9d2eb}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);font-size:13px}
+.reset{margin-top:14px;border:0;border-radius:13px;padding:12px 15px;background:var(--warn);font-weight:900;cursor:pointer}
+.stats{margin-top:14px;padding:18px;border-radius:20px;background:#111a32}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{padding:12px;border-radius:14px;background:#192343}.stat span{font-size:12px;color:var(--muted)}.stat b{display:block;margin-top:4px;font-size:22px}
+.nav{position:sticky;top:0;z-index:5;display:flex;gap:7px;padding:10px 0;background:rgba(9,16,31,.92)}.nav button{flex:1;border:0;border-radius:12px;padding:11px;background:#25325b;color:#fff;font-weight:900}
+.problem{scroll-margin-top:72px;margin:14px 0;padding:19px;border-radius:20px;background:var(--card)}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.topic{padding:6px 9px;border-radius:999px;background:#283660;font-size:12px}.level{font-size:12px;color:#ffd166;margin-top:6px}
+.source{margin:8px 0;color:#95a5cf;font-size:12px}.q{white-space:pre-line;line-height:1.9;font-size:17px}
+.row{display:flex;gap:8px;margin-top:15px}input{flex:1;min-width:0;padding:12px;border:1px solid #37466f;border-radius:12px;background:#0c1530;color:#fff}.grade{border:0;border-radius:12px;padding:0 14px;background:var(--good);font-weight:900}
+.feedback{min-height:22px;margin-top:7px;font-weight:800}.ok{color:var(--good)}.no{color:var(--bad)}.actions{display:flex;gap:8px;margin-top:8px}.actions button{border:0;border-radius:11px;padding:10px 12px;font-weight:800}.hintBtn{background:#344065;color:#fff}.ansBtn{background:var(--accent)}
+.box{display:none;margin-top:10px;padding:13px;border-radius:13px;background:var(--card2);line-height:1.75}.counter{margin-top:9px;color:var(--muted);font-size:12px}.note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.65}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
 <section class="hero">
 <h1>🇰🇷 Daily Math Boss</h1>
-<div class="sub"><b>대한민국 중2-2 ~ 공통수학1</b> 범위만. 외부 공개 OER 문제의 구조를 선별한 뒤 한국 교육과정에 맞게 번역·재구성하고, 단순 계산형은 제외한 검수형 버전입니다.</div>
-<div class="badges"><span class="badge" id="date"></span><span class="badge">작은 수 · 높은 사고력</span><span class="badge">교육과정 검수 완료</span></div>
+<div class="sub"><b>중2-2부터 공통수학1까지</b> 한국 교육과정 범위만 출제합니다. 숫자만 크게 만든 계산문제는 제외하고, 조건을 해석하고 여러 개념을 연결해야 풀리는 고난도 사고력 문제만 사용합니다.</div>
+<div class="badges"><span class="badge" id="date"></span><span class="badge">매일 00:00 새 문제</span><span class="badge">한국어 문제만</span><span class="badge">심화 사고력</span></div>
 <button class="reset" onclick="resetSet()">🔄 다른 5문제로 리셋</button>
 </section>
-<section class="stats"><b>📊 최근 7일 학습 리포트</b><div class="grid" style="margin-top:12px">
-<div class="stat"><span>정답률</span><b id="rate">0%</b></div><div class="stat"><span>채점 문제</span><b id="graded">0</b></div><div class="stat"><span>힌트 조회</span><b id="hints">0회</b></div><div class="stat"><span>정답 조회</span><b id="answers">0회</b></div></div></section>
-<nav id="nav" class="nav"></nav><main id="main"></main>
-<div class="note">출처 표시는 각 문제에 포함됩니다. 문제 문장은 한국 교과서 용어로 재구성했으며, OATutor/OpenStax 공개 OER의 주제 구조를 참고했습니다.</div>
+
+<section class="stats">
+<b>📊 최근 7일 학습 리포트</b>
+<div class="grid" style="margin-top:12px">
+<div class="stat"><span>정답률</span><b id="rate">0%</b></div>
+<div class="stat"><span>채점 문제</span><b id="graded">0</b></div>
+<div class="stat"><span>힌트 조회</span><b id="hints">0회</b></div>
+<div class="stat"><span>정답 조회</span><b id="answers">0회</b></div>
 </div>
+</section>
+
+<nav id="nav" class="nav"></nav>
+<main id="main"></main>
+<div class="note">외부 공개 수학 자료의 아이디어를 참고할 수 있으나, 앱에 노출되는 문항은 한국 교육과정과 용어에 맞게 다시 구성하고 검산한 문제만 사용합니다.</div>
+</div>
+
 <script>
-const BANK=[{"topic": "중2-2 · 도형의 닮음", "q": "△ABC에서 D, E는 각각 AB, AC 위의 점이고 DE∥BC이다.\nAD:DB=1:2이다.\n사다리꼴 DBCE의 넓이가 △ADE의 넓이보다 7만큼 클 때,\n△ABC의 넓이를 구하여라.", "ans": "9", "hint": "닮음비는 AD:AB=1:3이고, 넓이비는 그 제곱이다.", "sol": "△ADE:△ABC=1:9. △ADE의 넓이를 x라 하면 사다리꼴은 8x. 8x-x=7이므로 x=1, 전체 넓이는 9.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중2-2 · 피타고라스", "q": "직각삼각형의 두 직각변의 길이는 서로 다른 자연수이다.\n두 직각변의 합이 7이고 빗변이 5일 때,\n삼각형의 넓이를 구하여라.", "ans": "6", "hint": "(x+y)²=x²+y²+2xy를 이용하면 두 변을 직접 찾지 않아도 된다.", "sol": "직각변을 x,y라 하면 x+y=7, x²+y²=25. 49=25+2xy이므로 xy=12, 넓이는 6.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중2-2 · 확률", "q": "1, 2, 3, 4가 적힌 카드가 한 장씩 있다.\n서로 다른 두 장을 뽑아 두 자리 수를 만든다.\n그 수가 3의 배수라는 사실을 알고 있을 때,\n그 수가 30보다 클 확률을 구하여라.", "ans": "1/4", "hint": "조건을 만족하는 경우만 다시 전체 경우로 잡아라.", "sol": "3의 배수는 12,21,24,42의 4개. 30보다 큰 것은 42 하나이므로 1/4.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중2-2 · 닮음", "q": "△ABC에서 DE∥BC이고 AD:AB=1:2이다.\n△ADE의 넓이에 3을 더한 값이 사다리꼴 DBCE의 넓이와 같다.\n△ABC의 넓이를 구하여라.", "ans": "6", "hint": "넓이비는 1:4이다.", "sol": "△ADE=x라 하면 전체 4x, 사다리꼴 3x. x+3=3x이므로 x=3/2, 전체는 6.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중2-2 · 확률", "q": "주사위를 두 번 던졌다.\n두 눈의 합이 짝수라는 사실을 알고 있을 때,\n두 눈이 서로 같을 확률을 구하여라.", "ans": "1/3", "hint": "조건을 만족하는 경우만 세라. 합이 짝수이면 두 눈은 모두 홀수이거나 모두 짝수이다.", "sol": "합이 짝수인 경우는 18가지. 그중 같은 눈은 (1,1)~(6,6) 6가지이므로 6/18=1/3.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중2-2 · 피타고라스/닮음", "q": "직각삼각형 ABC에서 ∠C=90°, AC=3, BC=4, AB=5이다.\nC에서 AB에 내린 수선의 발을 H라 할 때,\nAH:HB를 구하여라.", "ans": "9:16", "hint": "AH=AC²/AB, HB=BC²/AB 관계를 이용해 보라.", "sol": "AH:HB=AC²:BC²=9:16.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 제곱근과 실수", "q": "a=√(6+2√5), b=√(6-2√5)라 할 때,\na+b를 구하여라.", "ans": "2√5", "hint": "6±2√5를 완전제곱꼴로 바꿔라.", "sol": "6+2√5=(√5+1)², 6-2√5=(√5-1)²이므로 합은 2√5.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 제곱근과 실수", "q": "a=√(7+4√3), b=√(7-4√3)라 할 때,\na³+b³을 구하여라.", "ans": "52", "hint": "a+b와 ab를 먼저 구하고 a³+b³ 공식을 사용하라.", "sol": "a=2+√3, b=2-√3. a+b=4, ab=1. 따라서 a³+b³=4³-3·1·4=52.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 인수분해", "q": "서로 다른 자연수 a,b가 a+b=7을 만족한다.\na²+b²가 가장 작을 때 ab를 구하여라.", "ans": "12", "hint": "합이 일정할 때 두 수가 가까울수록 제곱합이 작다.", "sol": "서로 다른 자연수 중 가장 가까운 쌍은 3,4이므로 ab=12.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 이차방정식", "q": "이차방정식 x²-5x+k=0의 두 근이 서로 다른 자연수이다.\n두 근의 차가 가장 작을 때 k를 구하여라.", "ans": "6", "hint": "두 근의 합은 5이다.", "sol": "가능한 자연수 쌍은 (1,4),(2,3). 차가 가장 작은 것은 2,3이고 곱은 6.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 이차방정식", "q": "두 실수 x,y가 x+y=7, xy=10을 만족한다.\n|x-y|를 구하여라.", "ans": "3", "hint": "(x-y)²=(x+y)²-4xy를 이용하라.", "sol": "(x-y)²=49-40=9이므로 |x-y|=3.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 이차함수", "q": "이차함수 y=(x-2)²-1의 그래프 위 서로 다른 두 점 A,B의 y좌표가 같다.\nA의 x좌표가 1일 때 B의 x좌표를 구하여라.", "ans": "3", "hint": "포물선의 축 x=2에 대한 대칭을 이용하라.", "sol": "x=1은 축에서 왼쪽으로 1, 다른 점은 오른쪽으로 1이므로 x=3.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-1 · 이차함수", "q": "이차함수 y=(x-3)²-2와 직선 y=2가 두 점 A,B에서 만난다.\nAB²을 구하여라.", "ans": "16", "hint": "두 교점의 y좌표가 같으므로 x좌표 차만 보면 된다.", "sol": "(x-3)²=4 → x=1,5. AB=4이므로 AB²=16.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 삼각비", "q": "직각삼각형 ABC에서 ∠C=90°이고 sin A=3/5이다.\nBC=6일 때 AC를 구하여라.", "ans": "8", "hint": "3:4:5 직각삼각형의 비를 생각하라.", "sol": "BC:AC:AB=3:4:5이고 BC=6이므로 2배. AC=8.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 삼각비", "q": "직각삼각형 ABC에서 ∠C=90°, AC=4, BC=3이다.\ntan A+tan B를 구하여라.", "ans": "25/12", "hint": "tan A=BC/AC, tan B=AC/BC.", "sol": "3/4+4/3=(9+16)/12=25/12.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 원의 성질", "q": "반지름이 5인 원에서 길이가 8인 현 AB가 있다.\n중심 O에서 AB에 내린 수선의 발을 H라 할 때 OH를 구하여라.", "ans": "3", "hint": "중심에서 현에 내린 수선은 현을 이등분한다.", "sol": "AH=4. 직각삼각형 OHA에서 OH=√(25-16)=3.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 원의 성질", "q": "반지름 13인 원에 길이가 10, 24인 두 평행한 현이 있다.\n두 현 사이의 거리가 7일 때,\n두 현이 중심의 같은 쪽이면 1, 반대쪽이면 2를 답하여라.", "ans": "1", "hint": "중심에서 두 현까지의 거리는 각각 얼마인지 구해 보라.", "sol": "거리들은 12와 5. 같은 쪽이면 차 7, 반대쪽이면 합 17. 따라서 1.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 통계", "q": "다섯 수 2,4,6,x,y의 평균과 중앙값이 모두 6이다.\nx<y일 때 x+y를 구하여라.", "ans": "18", "hint": "평균으로 전체 합부터 구하라.", "sol": "전체 합 30. 따라서 x+y=30-(2+4+6)=18.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "중3-2 · 통계", "q": "어떤 자료의 평균은 6, 분산은 3이다.\n모든 자료에 2를 더한 뒤 각각 2배하였다.\n새 자료의 평균과 분산의 합을 구하여라.", "ans": "28", "hint": "같은 수를 더하면 분산은 그대로, 2배 하면 분산은 4배.", "sol": "새 평균=(6+2)×2=16, 새 분산=3×4=12, 합은 28.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 다항식", "q": "a+b=4, ab=1일 때,\na⁴+b⁴을 구하여라.\na,b를 직접 구하지 말 것.", "ans": "194", "hint": "a²+b²를 먼저 구하라.", "sol": "a²+b²=16-2=14. a⁴+b⁴=14²-2=194.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 다항식", "q": "a+b=5, ab=6일 때,\na³+b³을 구하여라.", "ans": "35", "hint": "a³+b³=(a+b)³-3ab(a+b).", "sol": "125-3×6×5=35.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 방정식과 부등식", "q": "실수 x가 |x-2|+|x-5|=3을 만족한다.\n모든 해로 이루어진 구간의 길이를 구하여라.", "ans": "3", "hint": "수직선에서 2와 5까지 거리의 합을 생각하라.", "sol": "2≤x≤5에서는 거리의 합이 항상 3. 해의 구간 길이는 3.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 방정식과 부등식", "q": "정수 x가 |x-2|+|x-5|≤5를 만족한다.\n가능한 정수 x의 개수를 구하여라.", "ans": "6", "hint": "2와 5 사이에서는 합이 3이고, 바깥으로 1 이동하면 합이 2 증가한다.", "sol": "허용 범위는 1≤x≤6. 정수는 1,2,3,4,5,6의 6개.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 경우의 수", "q": "1,2,3,4 중 서로 다른 세 수를 골라 한 줄로 배열한다.\n단, 1과 2가 서로 이웃하면 안 된다.\n가능한 배열의 수를 구하여라.", "ans": "16", "hint": "전체에서 1과 2가 붙어 있는 경우를 빼라.", "sol": "전체 4P3=24. 붙는 경우는 세 번째 수 2가지×덩어리 배치 2가지×내부순서 2가지=8. 따라서 16.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 경우의 수", "q": "일렬로 놓인 7개의 자리 중 3자리를 고른다.\n고른 자리끼리는 서로 이웃하지 않아야 한다.\n고르는 방법의 수를 구하여라.", "ans": "10", "hint": "선택한 자리 사이에 빈 자리 하나씩을 미리 확보한다고 생각하라.", "sol": "서로 이웃하지 않는 3자리 선택 수는 C(5,3)=10.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}, {"topic": "공통수학1 · 행렬", "q": "A=[[1,2],[3,1]]일 때\nA²의 두 대각성분의 합을 구하여라.", "ans": "14", "hint": "A² 전체를 계산하지 말고 대각성분만 구해도 된다.", "sol": "(1,1)=1+6=7, (2,2)=6+1=7, 합은 14.", "source": "OpenStax/OATutor 공개 OER 기반 재구성"}];
-const $=x=>document.getElementById(x);
-function day(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function seed(){return Number(day().replaceAll('-',''))+Number(localStorage.getItem('reset_'+day())||0)*7919}
-function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const BANK = [
+{topic:"중2-2 · 도형의 닮음",q:"△ABC에서 D, E는 각각 AB, AC 위의 점이고 DE∥BC이다.\nAD:DB=2:1이고, 사다리꼴 DBCE의 넓이가 △ADE의 넓이보다 5만큼 크다.\n△ABC의 넓이를 구하여라.",ans:"45",hint:"AD:AB=2:3이므로 넓이비는 4:9이다.",sol:"△ADE의 넓이를 4k, △ABC의 넓이를 9k라 두면 사다리꼴은 5k이다. 사다리꼴의 넓이는 5k이고 △ADE의 넓이는 4k이므로 두 넓이의 차는 k이다. k=5이므로 △ABC의 넓이는 9k=45.",alt:"45",level:"상"},
+{topic:"중2-2 · 도형의 닮음",q:"△ABC에서 D, E는 각각 AB, AC 위의 점이고 DE∥BC이다.\nAD:DB=1:2이다. △ADE의 넓이가 4일 때, 사다리꼴 DBCE의 넓이를 구하여라.",ans:"32",hint:"닮음비 1:3 → 넓이비 1:9.",sol:"△ABC 넓이는 4×9=36, 사다리꼴은 36-4=32.",level:"상"},
+{topic:"중2-2 · 확률",q:"1,2,3,4가 적힌 카드가 한 장씩 있다. 서로 다른 두 장을 차례로 뽑아 두 자리 수를 만든다.\n그 수가 짝수라는 사실을 알고 있을 때, 그 수가 30보다 클 확률을 구하여라.",ans:"1/2",hint:"조건부 확률처럼 '짝수인 경우'만 다시 전체 경우로 잡아라.",sol:"짝수인 두 자리 수는 12,14,24,32,34,42의 6개. 그중 30보다 큰 것은 32,34,42 세 개이므로 1/2.",level:"상"},
+{topic:"중2-2 · 확률",q:"주사위를 두 번 던졌다. 두 눈의 합이 8 이상이라는 사실을 알고 있을 때, 두 눈이 같은 확률을 구하여라.",ans:"1/5",hint:"합이 8 이상인 순서쌍의 개수를 먼저 세어라.",sol:"합이 8,9,10,11,12인 경우는 5+4+3+2+1=15가지. 같은 눈이면서 합이 8 이상인 것은 (4,4),(5,5),(6,6) 3개이므로 3/15=1/5.",alt:"1/5",level:"최상"},
+{topic:"중2-2 · 피타고라스",q:"직각삼각형의 두 직각변의 합이 14이고 빗변의 길이가 10이다. 이 삼각형의 넓이를 구하여라.",ans:"24",hint:"(a+b)²=a²+b²+2ab.",sol:"196=100+2ab이므로 ab=48. 넓이는 ab/2=24.",level:"상"},
+{topic:"중2-2 · 피타고라스/닮음",q:"직각삼각형 ABC에서 ∠C=90°, AC=6, BC=8, AB=10이다. C에서 AB에 내린 수선의 발을 H라 할 때 AH:HB를 구하여라.",ans:"9:16",hint:"AH:HB=AC²:BC².",sol:"36:64=9:16.",level:"상"},
+
+{topic:"중3-1 · 제곱근과 실수",q:"a=√(6+2√5), b=√(6-2√5)일 때, (a+b)²의 값을 구하여라.",ans:"20",hint:"각 근호 안을 완전제곱꼴로 바꿔라.",sol:"a=√5+1, b=√5-1이므로 a+b=2√5, 제곱하면 20.",level:"상"},
+{topic:"중3-1 · 제곱근과 실수",q:"a=√(7+4√3), b=√(7-4√3)일 때, a³+b³을 구하여라.",ans:"52",hint:"a+b와 ab를 먼저 구하라.",sol:"a=2+√3, b=2-√3. a+b=4, ab=1. a³+b³=(a+b)³-3ab(a+b)=64-12=52.",level:"최상"},
+{topic:"중3-1 · 인수분해",q:"자연수 a,b가 a+b=9를 만족하고 a≠b이다. a²+b²가 가장 작을 때 ab의 값을 구하여라.",ans:"20",hint:"합이 일정하면 두 수가 가까울수록 제곱합이 작다.",sol:"서로 다른 자연수 중 가장 가까운 쌍은 4,5이므로 ab=20.",level:"상"},
+{topic:"중3-1 · 이차방정식",q:"이차방정식 x²-9x+k=0의 두 근이 서로 다른 자연수이다. 두 근의 차가 가장 작을 때 k를 구하여라.",ans:"20",hint:"두 근의 합은 9.",sol:"가능한 자연수 쌍 중 가장 가까운 것은 4와 5이므로 k=4×5=20.",level:"상"},
+{topic:"중3-1 · 이차방정식",q:"두 실수 x,y가 x+y=10, xy=21을 만족한다. |x-y|를 구하여라.",ans:"4",hint:"(x-y)²=(x+y)²-4xy.",sol:"100-84=16이므로 |x-y|=4.",level:"상"},
+{topic:"중3-1 · 이차함수",q:"이차함수 y=(x-1)²-4의 그래프 위 두 점 A,B의 y좌표가 같고, A의 x좌표가 -2이다. B의 x좌표를 구하여라.",ans:"4",hint:"축 x=1에 대한 대칭.",sol:"-2는 축에서 3만큼 왼쪽이므로 대칭점은 1+3=4.",level:"상"},
+{topic:"중3-1 · 이차함수",q:"이차함수 y=(x-2)²-1과 직선 y=8이 두 점 A,B에서 만난다. 선분 AB의 길이를 구하여라.",ans:"6",hint:"교점의 y좌표가 같으므로 x좌표의 차만 구하면 된다.",sol:"(x-2)²=9이므로 x=-1,5. 길이는 6.",level:"상"},
+
+{topic:"중3-2 · 삼각비",q:"직각삼각형 ABC에서 ∠C=90°, tan A=3/4이고 AC=8이다. 삼각형 ABC의 넓이를 구하여라.",ans:"24",hint:"tan A=BC/AC.",sol:"BC/8=3/4이므로 BC=6. 넓이는 8×6÷2=24.",level:"상"},
+{topic:"중3-2 · 삼각비",q:"직각삼각형 ABC에서 ∠C=90°, sin A=3/5이다. cos A+tan A의 값을 구하여라.",ans:"31/20",hint:"3:4:5 삼각형을 이용하라.",sol:"cos A=4/5, tan A=3/4. 합은 16/20+15/20=31/20.",level:"상"},
+{topic:"중3-2 · 원의 성질",q:"반지름이 13인 원에서 길이가 10인 현 AB가 있다. 중심 O에서 AB에 내린 수선의 발을 H라 할 때 OH를 구하여라.",ans:"12",hint:"AH=5.",sol:"OH=√(13²-5²)=√144=12.",level:"상"},
+{topic:"중3-2 · 원의 성질",q:"반지름이 10인 원에서 중심 O로부터 어떤 현 AB까지의 거리가 6이다. 현 AB의 길이를 구하여라.",ans:"16",hint:"중심에서 현에 내린 수선은 현을 이등분한다.",sol:"반현의 길이는 √(10²-6²)=8, 따라서 현은 16.",level:"상"},
+{topic:"중3-2 · 통계",q:"5개의 수 2,4,6,x,y의 평균이 8이고 중앙값이 6이다. x≤y일 때 x+y를 구하여라.",ans:"28",hint:"평균으로 전체 합부터 구하라.",sol:"전체 합은 40. 이미 2+4+6=12이므로 x+y=28.",level:"상"},
+{topic:"중3-2 · 통계",q:"어떤 자료의 평균이 5, 분산이 4이다. 모든 자료에 3을 더한 뒤 각각 2배하였다. 새 자료의 평균과 분산의 합을 구하여라.",ans:"32",hint:"평행이동은 분산을 바꾸지 않고, 2배하면 분산은 4배.",sol:"새 평균=(5+3)×2=16, 새 분산=4×4=16, 합은 32.",level:"상"},
+
+{topic:"공통수학1 · 다항식",q:"a+b=5, ab=3일 때 a⁴+b⁴을 구하여라. a,b를 직접 구하지 말 것.",ans:"343",hint:"a²+b²부터 구하라.",sol:"a²+b²=25-6=19. a⁴+b⁴=19²-2×9=361-18=343.",level:"최상"},
+{topic:"공통수학1 · 다항식",q:"a+b=6, ab=5일 때 a³+b³을 구하여라.",ans:"126",hint:"a³+b³=(a+b)³-3ab(a+b).",sol:"216-90=126.",level:"상"},
+{topic:"공통수학1 · 방정식과 부등식",q:"실수 x가 |x-1|+|x-7|=6을 만족한다. 모든 해로 이루어진 구간의 길이를 구하여라.",ans:"6",hint:"두 점 1과 7 사이에서는 거리의 합이 항상 6.",sol:"해는 1≤x≤7, 구간 길이는 6.",level:"상"},
+{topic:"공통수학1 · 방정식과 부등식",q:"정수 x가 |x-2|+|x-6|≤6을 만족한다. 가능한 정수 x의 개수를 구하여라.",ans:"7",hint:"2와 6 사이에서는 합이 4. 양쪽으로 1 이동할 때 합은 2씩 증가한다.",sol:"허용 범위는 1≤x≤7. 정수는 7개.",level:"상"},
+{topic:"공통수학1 · 경우의 수",q:"1,2,3,4,5 중 서로 다른 세 수를 골라 한 줄로 배열한다. 단, 1과 2는 서로 이웃하면 안 된다. 가능한 배열의 수를 구하여라.",ans:"42",hint:"전체에서 1과 2가 붙어 있는 경우를 빼라.",sol:"전체는 5P3=60. 붙는 경우: 세 번째 수 3가지 × 덩어리 배치 3가지 × 내부순서 2가지 =18. 따라서 42.",level:"최상"},
+{topic:"공통수학1 · 경우의 수",q:"일렬로 놓인 8개의 자리 중 3자리를 고른다. 고른 자리끼리는 서로 이웃하지 않아야 한다. 고르는 방법의 수를 구하여라.",ans:"20",hint:"서로 이웃하지 않는 k개 선택 공식 또는 빈칸을 끼워 넣는 방법.",sol:"C(8-3+1,3)=C(6,3)=20.",level:"상"},
+{topic:"공통수학1 · 행렬",q:"A=[[1,2],[2,1]]일 때 A²의 모든 성분의 합을 구하여라.",ans:"18",hint:"A²를 직접 계산해도 되지만 행과 열의 구조를 관찰해도 된다.",sol:"A²=[[5,4],[4,5]], 합은 18.",level:"상"},
+{topic:"공통수학1 · 행렬",q:"A=[[1,1],[1,0]]일 때 A³의 (1,2) 성분을 구하여라.",ans:"2",hint:"A²를 먼저 구한 뒤 A를 한 번 더 곱하라.",sol:"A²=[[2,1],[1,1]], A³=[[3,2],[2,1]], 따라서 (1,2) 성분은 2.",level:"최상"}
+];
+
+const $=id=>document.getElementById(id);
+function dkey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function seeded(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function currentSeed(){return Number(dkey().replaceAll('-','')) + Number(localStorage.getItem('reset_'+dkey())||0)*104729}
 function norm(x){return String(x).replace(/\s/g,'').replace(/−/g,'-').replace(/√/g,'sqrt').toLowerCase()}
-function eq(a,b){if(norm(a)===norm(b))return true;let f=x=>{let m=norm(x).match(/^(-?\d+)\/(-?\d+)$/);return m?+m[1]/+m[2]:Number(norm(x))};let x=f(a),y=f(b);return Number.isFinite(x)&&Number.isFinite(y)&&Math.abs(x-y)<1e-9}
+function numeric(x){let s=norm(x);let m=s.match(/^(-?\d+)\/(-?\d+)$/);if(m)return +m[1]/+m[2];if(/^[-+]?\d+(\.\d+)?$/.test(s))return +s;return NaN}
+function correct(input,p){if(norm(input)===norm(p.ans))return true;if(p.alt && norm(input)===norm(p.alt))return true;let a=numeric(input),b=numeric(p.ans);return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<1e-9}
 let current=[];
-function logKey(i){return 'klog_'+day()+'_'+current[i].topic+'_'+current[i].q.slice(0,25)}
-function getLog(i){return JSON.parse(localStorage.getItem(logKey(i))||'{"attempts":0,"correct":false,"hint":0,"answer":0}')}
-function saveLog(i,l){localStorage.setItem(logKey(i),JSON.stringify(l))}
-function pickSet(){
- let r=rng(seed()), idx=[...BANK.keys()];
- for(let i=idx.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
- // Try to spread curriculum levels.
+function pick(){
+ let r=seeded(currentSeed()), ids=[...BANK.keys()];
+ for(let i=ids.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}
  const groups=["중2-2","중3-1","중3-2","공통수학1"];
  let chosen=[];
- for(const g of groups){let j=idx.find(x=>BANK[x].topic.startsWith(g)&&!chosen.includes(x));if(j!==undefined)chosen.push(j)}
- for(const j of idx){if(chosen.length>=5)break;if(!chosen.includes(j))chosen.push(j)}
+ groups.forEach(g=>{let x=ids.find(i=>BANK[i].topic.startsWith(g)&&!chosen.includes(i));if(x!==undefined)chosen.push(x)});
+ for(const i of ids){if(chosen.length>=5)break;if(!chosen.includes(i))chosen.push(i)}
  current=chosen.slice(0,5).map(i=>BANK[i]);
 }
+function logKey(i){return 'mathlog_'+dkey()+'_'+current[i].topic+'_'+current[i].q.slice(0,18)}
+function getLog(i){return JSON.parse(localStorage.getItem(logKey(i))||'{"attempts":0,"correct":false,"hint":0,"answer":0}')}
+function saveLog(i,l){localStorage.setItem(logKey(i),JSON.stringify(l))}
 function render(){
- pickSet(); $('date').textContent=day()+' 오늘의 5문제'; $('nav').innerHTML=''; $('main').innerHTML='';
- current.forEach((p,i)=>{let n=i+1, b=document.createElement('button');b.textContent=n+'번';b.onclick=()=>$('p'+n).scrollIntoView({behavior:'smooth'});$('nav').appendChild(b);
- let l=getLog(i),s=document.createElement('section');s.className='problem';s.id='p'+n;
- s.innerHTML=`<div class="top"><b style="font-size:22px">문제 ${n}</b><span class="topic">${p.topic}</span></div>
- <div class="source">출처: ${p.source}</div><div class="q">${p.q}</div>
- <div class="row"><input id="in${n}" placeholder="답을 입력하세요"><button class="grade" onclick="grade(${i})">채점</button></div>
- <div id="fb${n}" class="feedback">${l.correct?'<span class="ok">✓ 정답 기록됨</span>':''}</div>
- <div class="actions"><button class="hintBtn" onclick="hint(${i})">힌트 보기</button><button class="ansBtn" onclick="answer(${i})">정답·해설 보기</button></div>
- <div class="box" id="h${n}">${p.hint}</div><div class="box" id="a${n}"><b>정답: ${p.ans}</b><br><br>${p.sol}</div>
- <div class="counter" id="c${n}">시도 ${l.attempts}회 · 힌트 ${l.hint}회 · 정답/해설 ${l.answer}회</div>`;$('main').appendChild(s);});
+ pick(); $('date').textContent=dkey()+' 오늘의 5문제'; $('nav').innerHTML=''; $('main').innerHTML='';
+ current.forEach((p,i)=>{
+  let n=i+1,b=document.createElement('button');b.textContent=n+'번';b.onclick=()=>$('p'+n).scrollIntoView({behavior:'smooth'});$('nav').appendChild(b);
+  let l=getLog(i),s=document.createElement('section');s.className='problem';s.id='p'+n;
+  s.innerHTML=`<div class="top"><b style="font-size:22px">문제 ${n}</b><span class="topic">${p.topic}</span></div>
+  <div class="level">난이도: ${p.level}</div>
+  <div class="source">한국 교육과정 검수형 · 외부 공개 문제 아이디어 재구성</div>
+  <div class="q">${p.q}</div>
+  <div class="row"><input id="in${n}" placeholder="답을 입력하세요"><button class="grade" onclick="grade(${i})">채점</button></div>
+  <div id="fb${n}" class="feedback">${l.correct?'<span class="ok">✓ 정답 기록됨</span>':''}</div>
+  <div class="actions"><button class="hintBtn" onclick="hint(${i})">힌트 보기</button><button class="ansBtn" onclick="answer(${i})">정답·해설 보기</button></div>
+  <div class="box" id="h${n}">${p.hint}</div><div class="box" id="a${n}"><b>정답: ${p.alt||p.ans}</b><br><br>${p.sol}</div>
+  <div class="counter" id="c${n}">시도 ${l.attempts}회 · 힌트 ${l.hint}회 · 정답/해설 ${l.answer}회</div>`;
+  $('main').appendChild(s);
+ });
  updateStats();
 }
-function update(i){let l=getLog(i),n=i+1;$('c'+n).textContent=`시도 ${l.attempts}회 · 힌트 ${l.hint}회 · 정답/해설 ${l.answer}회`;updateStats()}
-function grade(i){let n=i+1,v=$('in'+n).value.trim();if(!v)return;let l=getLog(i);l.attempts++;if(eq(v,current[i].ans))l.correct=true;saveLog(i,l);$('fb'+n).innerHTML=eq(v,current[i].ans)?'<span class="ok">✓ 정답!</span>':'<span class="no">✕ 다시 생각해 봐.</span>';update(i)}
-function hint(i){let l=getLog(i);l.hint++;saveLog(i,l);$('h'+(i+1)).style.display='block';update(i)}
-function answer(i){let l=getLog(i);l.answer++;saveLog(i,l);$('a'+(i+1)).style.display='block';update(i)}
-function resetSet(){let k='reset_'+day();localStorage.setItem(k,Number(localStorage.getItem(k)||0)+1);render()}
+function updateLine(i){let l=getLog(i),n=i+1;$('c'+n).textContent=`시도 ${l.attempts}회 · 힌트 ${l.hint}회 · 정답/해설 ${l.answer}회`;updateStats()}
+function grade(i){let n=i+1,v=$('in'+n).value.trim();if(!v)return;let l=getLog(i);l.attempts++;if(correct(v,current[i]))l.correct=true;saveLog(i,l);$('fb'+n).innerHTML=correct(v,current[i])?'<span class="ok">✓ 정답!</span>':'<span class="no">✕ 다시 생각해 봐.</span>';updateLine(i)}
+function hint(i){let l=getLog(i);l.hint++;saveLog(i,l);$('h'+(i+1)).style.display='block';updateLine(i)}
+function answer(i){let l=getLog(i);l.answer++;saveLog(i,l);$('a'+(i+1)).style.display='block';updateLine(i)}
+function resetSet(){let k='reset_'+dkey();localStorage.setItem(k,Number(localStorage.getItem(k)||0)+1);render()}
 function updateStats(){
- let dates=new Set();let d=new Date();for(let i=0;i<7;i++){let x=new Date(d);x.setDate(d.getDate()-i);dates.add(day(x))}
+ let ds=new Set(),d=new Date();for(let i=0;i<7;i++){let x=new Date(d);x.setDate(d.getDate()-i);ds.add(dkey(x))}
  let total=0,ok=0,h=0,a=0;
- for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(!k||!k.startsWith('klog_'))continue;let dt=k.slice(5,15);if(!dates.has(dt))continue;try{let l=JSON.parse(localStorage.getItem(k));if(l.attempts>0){total++;if(l.correct)ok++}h+=l.hint||0;a+=l.answer||0}catch(e){}}
+ for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(!k||!k.startsWith('mathlog_'))continue;let dt=k.slice(8,18);if(!ds.has(dt))continue;try{let l=JSON.parse(localStorage.getItem(k));if(l.attempts>0){total++;if(l.correct)ok++}h+=l.hint||0;a+=l.answer||0}catch(e){}}
  $('rate').textContent=(total?Math.round(ok/total*100):0)+'%';$('graded').textContent=total;$('hints').textContent=h+'회';$('answers').textContent=a+'회';
 }
 render();
-</script></body></html>
+</script>
+</body>
+</html>
